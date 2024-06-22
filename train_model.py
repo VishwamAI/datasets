@@ -18,7 +18,7 @@ def train_model(dataset_path, model_name, output_dir, num_train_epochs, batch_si
     # Tokenize dataset
     def tokenize_function(examples):
         tokenized_inputs = tokenizer([q + " " + c for q, c in zip(examples['question'], examples['context'])], padding='max_length', truncation=True)
-        tokenized_inputs['labels'] = [a['text'][0] for a in examples['answers']]
+        tokenized_inputs['labels'] = [1 if a['text'][0].lower() == 'yes' else 0 for a in examples['answers']]
         return tokenized_inputs
 
     tokenized_datasets = dataset.map(tokenize_function, batched=True)
