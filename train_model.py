@@ -5,7 +5,7 @@ from datasets import load_dataset
 
 def train_model(dataset_path, model_name, output_dir, num_train_epochs, batch_size):
     # Load dataset
-    dataset = load_dataset('csv', data_files=dataset_path)
+    dataset = load_dataset('parquet', data_files=dataset_path)
 
     # Load tokenizer and model
     tokenizer = AutoTokenizer.from_pretrained(model_name)

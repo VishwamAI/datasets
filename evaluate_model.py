@@ -5,7 +5,7 @@ from datasets import load_dataset, load_metric
 
 def evaluate_model(dataset_path, model_path, batch_size):
     # Load dataset
-    dataset = load_dataset('csv', data_files=dataset_path)
+    dataset = load_dataset('parquet', data_files=dataset_path)
 
     # Load tokenizer and model
     tokenizer = AutoTokenizer.from_pretrained(model_path)
