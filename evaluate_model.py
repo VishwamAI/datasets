@@ -41,7 +41,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Evaluate a model on the provided dataset.")
     parser.add_argument("--dataset", type=str, required=True, help="Path to the dataset file.")
     parser.add_argument("--model_path", type=str, required=True, help="Path to the trained model.")
-    parser.add_argument("--batch_size", type=int, default=8, help="Batch size for evaluation.")
+    parser.add_argument("--batch_size", type=int, default=2, help="Batch size for evaluation.")
     args = parser.parse_args()
 
     evaluate_model(args.dataset, args.model_path, args.batch_size)
