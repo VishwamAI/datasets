@@ -1,11 +1,14 @@
 import argparse
 import torch
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, Trainer, TrainingArguments
-from datasets import load_dataset
+from datasets import load_dataset, DatasetDict
 
 def train_model(dataset_path, model_name, output_dir, num_train_epochs, batch_size):
     # Load dataset
     dataset = load_dataset('parquet', data_files=dataset_path)
+
+    # Split the dataset into train and test sets
+    dataset = dataset['train'].train_test_split(test_size=0.2)
 
     # Load tokenizer and model
     tokenizer = AutoTokenizer.from_pretrained(model_name)
