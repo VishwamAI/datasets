@@ -70,7 +70,7 @@ if __name__ == "__main__":
     parser.add_argument("--model_name", type=str, default="bert-base-uncased", help="Model name or path.")
     parser.add_argument("--output_dir", type=str, default="./model_output", help="Directory to save the trained model.")
     parser.add_argument("--num_train_epochs", type=int, default=3, help="Number of training epochs.")
-    parser.add_argument("--batch_size", type=int, default=8, help="Batch size for training and evaluation.")
+    parser.add_argument("--batch_size", type=int, default=4, help="Batch size for training and evaluation.")
     args = parser.parse_args()
 
     train_model(args.dataset, args.model_name, args.output_dir, args.num_train_epochs, args.batch_size)
