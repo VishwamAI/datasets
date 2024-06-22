@@ -1,12 +1,12 @@
 import os
 import requests
 import argparse
-from huggingface_hub import HfApi
+from huggingface_hub import HfApi, HfFolder, hf_hub_download
 
 # Function to authenticate with Hugging Face API
 def authenticate_huggingface(api_key):
+    HfFolder.save_token(api_key)
     api = HfApi()
-    api.set_access_token(api_key)
     return api
 
 # Function to check for dataset updates
@@ -18,7 +18,12 @@ def check_for_updates(api, dataset_name):
 # Function to download the latest dataset
 def download_dataset(api, dataset_name, output_dir):
     # Download the dataset files
-    api.download_dataset(dataset_name, output_dir=output_dir)
+    repo_id = dataset_name
+    filenames = ["plain_text/train-00000-of-00001.parquet", "plain_text/validation-00000-of-00001.parquet"]  # Adjusted filenames with directory
+    os.makedirs(output_dir, exist_ok=True)
+    for filename in filenames:
+        file_path = hf_hub_download(repo_id=repo_id, filename=filename, repo_type="dataset")
+        os.rename(file_path, os.path.join(output_dir, os.path.basename(filename)))
 
 # Main function to handle the self-updating process
 def self_update(api_key, dataset_name, output_dir):
