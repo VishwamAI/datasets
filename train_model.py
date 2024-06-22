@@ -1,5 +1,6 @@
 import argparse
 import torch
+import psutil
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, Trainer, TrainingArguments
 from datasets import load_dataset, DatasetDict
 
@@ -31,16 +32,33 @@ def train_model(dataset_path, model_name, output_dir, num_train_epochs, batch_si
         logging_dir='./logs',
     )
 
-    # Initialize Trainer
-    trainer = Trainer(
+    # Initialize Trainer with custom compute_loss function
+    class CustomTrainer(Trainer):
+        def compute_loss(self, model, inputs, return_outputs=False):
+            labels = inputs.get("labels")
+            outputs = model(**inputs)
+            logits = outputs.get("logits")
+            loss = torch.nn.functional.cross_entropy(logits, labels)
+            return (loss, outputs) if return_outputs else loss
+
+    trainer = CustomTrainer(
         model=model,
         args=training_args,
         train_dataset=tokenized_datasets['train'],
         eval_dataset=tokenized_datasets['test'],
     )
 
-    # Train model
-    trainer.train()
+    # Monitor memory usage
+    def memory_monitor():
+        process = psutil.Process()
+        mem_info = process.memory_info()
+        print(f"Memory usage: {mem_info.rss / 1024 ** 2:.2f} MB")
+
+    # Train model with memory monitoring
+    for epoch in range(num_train_epochs):
+        memory_monitor()
+        trainer.train()
+        memory_monitor()
 
     # Save model
     model.save_pretrained(output_dir)
