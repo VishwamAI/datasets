@@ -13,7 +13,7 @@ def train_model(dataset_path, model_name, output_dir, num_train_epochs, batch_si
 
     # Tokenize dataset
     def tokenize_function(examples):
-        return tokenizer(examples['text'], padding='max_length', truncation=True)
+        return tokenizer(examples['question'] + " " + examples['context'], padding='max_length', truncation=True)
 
     tokenized_datasets = dataset.map(tokenize_function, batched=True)
 
